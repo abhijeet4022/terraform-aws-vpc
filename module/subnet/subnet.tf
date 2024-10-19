@@ -11,6 +11,7 @@ resource "aws_subnet" "main" {
 }
 
 
+# Create RT for all subnets.
 resource "aws_route_table" "main" {
   for_each = var.subnets
   vpc_id   = var.vpc_id
@@ -20,6 +21,7 @@ resource "aws_route_table" "main" {
   }
 }
 
+# Attach RT with Subnets.
 resource "aws_route_table_association" "main" {
   for_each       = var.subnets
   subnet_id      = lookup(lookup(aws_subnet.main, each.key, null), "id", null)

@@ -8,7 +8,7 @@ resource "aws_vpc" "main" {
 }
 
 
-# Create the Subnets.
+# Create the Subnets, RT and RT Association.
 module "subnets" {
   source   = "./module/subnet"
   for_each = var.subnets
