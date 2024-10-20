@@ -57,3 +57,14 @@ resource "aws_route" "ngw" {
   destination_cidr_block = "0.0.0.0/0"
   nat_gateway_id         = element(aws_nat_gateway.nwg.*.id, count.index)
 }
+
+
+# Create the Default VPC to Main VPC peering
+resource "aws_vpc_peering_connection" "peering" {
+  peer_vpc_id = aws_vpc.main.id
+  vpc_id      = var.default_vpc_id
+  auto_accept = true
+  tags        = { Name = "VPC Peering between Default VPC and ${var.vpc_name}-vpc" }
+}
+
+
