@@ -50,7 +50,7 @@ resource "aws_nat_gateway" "nwg" {
 
 }
 
-# # Create route entry for Private Subnet to Nat Gateway to access internet
+# Create route entry for Private Subnet to Nat Gateway to access internet
 resource "aws_route" "ngw" {
   count                  = length(local.private_route_table_ids)
   route_table_id         = element(local.private_route_table_ids, count.index)
@@ -67,4 +67,11 @@ resource "aws_vpc_peering_connection" "peering" {
   tags        = { Name = "VPC Peering between Default VPC and ${var.vpc_name}-vpc" }
 }
 
+# Create route entry for Private Subnet to Default VPC via VPC Peering.
+resource "aws_route" "peer-rt" {
+  count                  = length(local.private_route_table_ids)
+  route_table_id         = element(local.private_route_table_ids, count.index)
+  destination_cidr_block = var.default_vpc_cidr
+  vpc_peering_connection_id = aws_vpc_peering_connection.peering.id
+}
 
