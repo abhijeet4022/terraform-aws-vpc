@@ -36,17 +36,16 @@ resource "aws_route" "igw" {
 
 # Create Elastic IPs for Nat Gateway
 resource "aws_eip" "ngw" {
-  count = length(local.public_subnet_ids)
-  domain   = "vpc"
-  tags = { Name = "eip-${count.index + 1}"  }
+  count  = length(local.public_subnet_ids)
+  domain = "vpc"
+  tags   = { Name = "eip-${count.index + 1}" }
 }
 
 # Create nat gateway in public subnets
 resource "aws_nat_gateway" "nwg" {
-  count = length(local.public_subnet_ids)
-  allocation_id = element(aws_eip.ngw.*.id, count.index )
-  subnet_id     = element(local.public_subnet_ids, count.index )
-
-  tags = { Name = "ngw-${count.index + 1}"  }
+  count         = length(local.public_subnet_ids)
+  allocation_id = element(aws_eip.ngw.*.id, count.index)
+  subnet_id     = element(local.public_subnet_ids, count.index)
+  tags          = { Name = "ngw-${count.index + 1}" }
 
 }
