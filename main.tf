@@ -3,9 +3,10 @@ resource "aws_vpc" "main" {
   cidr_block = var.cidr_block
 
   tags = {
-    Name = var.vpc_name
+    Name = "${var.vpc_name}-vpc"
   }
 }
+
 
 
 # Create the Subnets, RT and RT Association.
