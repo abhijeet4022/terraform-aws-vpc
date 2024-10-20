@@ -34,6 +34,11 @@ resource "aws_internet_gateway" "igw" {
 #   gateway_id = aws_internet_gateway.igw
 # }
 
-output "rt" {
+output "vpc" {
   value = module.subnets
+}
+
+
+output "rt" {
+  value = module.subnets.route_table
 }
