@@ -67,11 +67,19 @@ resource "aws_vpc_peering_connection" "peering" {
   tags        = { Name = "VPC Peering between Default VPC and ${var.vpc_name}-vpc" }
 }
 
-# Create route entry for Private Subnet to Default VPC via VPC Peering.
-resource "aws_route" "peer-rt" {
-  count                  = length(local.private_route_table_ids)
-  route_table_id         = element(local.private_route_table_ids, count.index)
-  destination_cidr_block = var.default_vpc_cidr
+# Create route entry for Main VPC private subnets to Default VPC via VPC Peering.
+resource "aws_route" "main-peering-rt" {
+  count                     = length(local.private_route_table_ids)
+  route_table_id            = element(local.private_route_table_ids, count.index)
+  destination_cidr_block    = var.default_vpc_cidr
   vpc_peering_connection_id = aws_vpc_peering_connection.peering.id
 }
+
+# Create route entry for default VPC public subnet to Main VPC via VPC Peering.
+resource "aws_route" "default-peering-rt" {
+  route_table_id            = var.default_vpc_rt_id
+  destination_cidr_block    = var.cidr_block
+  vpc_peering_connection_id = aws_vpc_peering_connection.peering.id
+}
+
 
