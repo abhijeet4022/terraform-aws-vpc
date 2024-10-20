@@ -35,5 +35,5 @@ resource "aws_internet_gateway" "igw" {
 # }
 
 output "vpc" {
-  value = module.subnets
+  value = lookup(module.subnets, "public", null )
 }
