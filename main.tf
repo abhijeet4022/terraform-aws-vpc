@@ -34,8 +34,19 @@ resource "aws_route" "igw" {
   gateway_id             = aws_internet_gateway.igw.id
 }
 
+# Create Elastic IPs for Nat Gateway
+resource "aws_eip" "ngw" {
+  count = length(local.public_subnet_ids)
+  domain   = "vpc"
+  tags = { Name = "eip-${count.index + 1}"  }
+}
 
+# Create nat gateway in public subnets
+resource "aws_nat_gateway" "nwg" {
+  count = length(local.public_subnet_ids)
+  allocation_id = element(aws_eip.ngw.*.id, count.index )
+  subnet_id     = element(local.public_subnet_ids, count.index )
 
-# output "vpc" {
-#   value = lookup(lookup(module.subnets, "public", null ), "route_table_ids", null)
-# }
+  tags = { Name = "ngw-${count.index + 1}"  }
+
+}
