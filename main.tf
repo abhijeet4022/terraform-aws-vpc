@@ -37,8 +37,3 @@ resource "aws_internet_gateway" "igw" {
 output "vpc" {
   value = module.subnets
 }
-
-
-output "rt" {
-  value = module.subnets.route_table
-}
