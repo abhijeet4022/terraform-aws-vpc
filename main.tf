@@ -40,5 +40,5 @@ output "vpc" {
 
 
 output "rt" {
-  value = module.subnets.route_table
+  value = module.subnets["route_table"]
 }
